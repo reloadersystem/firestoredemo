@@ -14,11 +14,32 @@ class MainActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
 
         //consultar  imformacion
-        db.collection("ciudades").document("NY").get().addOnSuccessListener { document ->
-            document?.let {
+//        db.collection("ciudades").document("NY").get().addOnSuccessListener { document ->
+//            document?.let {
+////                Log.d("Firebase", "Document da: ${document.data}")
+//
+//                val ciudad = document.toObject(Ciudad::class.java)
+//
+////                val color = document.getString("color")
+////                val population = document.get("population").toString()
+////                Log.d("Firebase", "Color: ${color}")
+////                Log.d("Firebase", "population : ${population}")
+//
+//                Log.d("Firebase", "Color: ${ciudad?.color}")
+//                Log.d("Firebase", "population : ${ciudad?.population}")
+//                Log.d("Firebase", "PostalCode : ${ciudad?.pc}")
+//
+//
+//            }
+//        }.addOnFailureListener { error ->
+//            Log.e("FirebaseError", error.toString())
+//        }
+
+        db.collection("ciudades").document("NY").addSnapshotListener { value, error ->
+            value?.let {
 //                Log.d("Firebase", "Document da: ${document.data}")
 
-                val ciudad = document.toObject(Ciudad::class.java)
+                val ciudad = value.toObject(Ciudad::class.java)
 
 //                val color = document.getString("color")
 //                val population = document.get("population").toString()
@@ -28,11 +49,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("Firebase", "Color: ${ciudad?.color}")
                 Log.d("Firebase", "population : ${ciudad?.population}")
                 Log.d("Firebase", "PostalCode : ${ciudad?.pc}")
-
-
             }
-        }.addOnFailureListener { error ->
-            Log.e("FirebaseError", error.toString())
         }
 
         //Ingresasr informacion
