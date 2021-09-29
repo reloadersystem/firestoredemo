@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
     private var arrNews = mutableListOf<ESms>()
     private var envioLista = mutableListOf<ESms>()
 
-    private var count: Int = 0
+    private  var count = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             for (seleccion in it) {
                 //Log.d("Firebase", "Datos doc: ${seleccion.data}")
                 //Log.d("Firebase", "Datos doc: ${seleccion.data}")
-
+                val codeAuto = seleccion.id
                 val idestado = seleccion.data["estado_id"] as Any
                 val destinatario_sms = seleccion.data["sms_destinatario"].toString()
                 val envio_error_sms = seleccion.data["sms_envio_error"].toString()
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                 val mensaje_sms = seleccion.data["sms_mensaje"].toString()
 
                 arrNews.add(
-                    ESms(
+                    ESms(codeAuto,
                         idestado,
                         destinatario_sms,
                         envio_error_sms,
@@ -67,13 +67,14 @@ class MainActivity : AppCompatActivity() {
             // Log.d("arrNewsFirebase", "$arrNews")
 
 
-            val smslista = arrNews[count].sms_id
-            // Log.d("contador", "$smslista")
+            val smslista = arrNews[0].sms_id
+            val codeAuto = arrNews[0].code
+            Log.d("contador", "${codeAuto}")
             db.collection("data").whereEqualTo("sms_id", smslista).get().addOnSuccessListener {
 
                 for (lista in it) {
-                    // Log.d("Firebase", "Datos doc: ${lista.data}")
-                    val codeAuto = lista.id
+                    //Log.d("Firebase", "Datos doc: ${lista.data}")
+                        // Log.d("Firebase", "doc auto: ${codeAuto}")
                     val idestado = lista.data["estado_id"] as Any
                     val destinatario_sms = lista.data["sms_destinatario"].toString()
                     val envio_error_sms = lista.data["sms_envio_error"].toString()
@@ -82,9 +83,8 @@ class MainActivity : AppCompatActivity() {
                     val fecha_registro_sms = lista.data["sms_fecha_registro"] as Date
                     val id_sms = lista.data["sms_id"] as Any
                     val mensaje_sms = lista.data["sms_mensaje"].toString()
-
-                    updateFirebaseData(codeAuto)
                 }
+                updateFirebaseData(codeAuto)
 
             }
 
@@ -127,21 +127,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateFirebaseData(codeAuto: String) {
 
-
-//        val mensaje = hashMapOf(
-//            "estado_id" to 2624,
-//            "sms_destinatario" to "+51961162784",
-//            "sms_envio_error" to "Retorno",
-//            "sms_envio_estado" to true,
-//            "sms_envio_fecha" to 1133333,
-//            "sms_fecha_registro" to 1632934428,
-//            "sms_id" to 1311998,
-//            "sms_mensaje" to "Developer"
-//        )
-
+        //
         val db = FirebaseFirestore.getInstance()
-
-        var enviofecha: String = "1632943015"
+        var enviofecha: String = "1632952645"
         var t = enviofecha.toLong()
         var ts = Timestamp(t, 0)
 
@@ -152,12 +140,12 @@ class MainActivity : AppCompatActivity() {
         db.collection("data").document(codeAuto)
             .set(
                 smsUpdate(
-                    2624, "Jose", "converti a TimeStamp", false,
+                    2623, "+51961162784", "Error de sistema", false,
                     ts, ts2, 1311998,
-                    "sin miedo al exito"
+                    "vencimiento setiembre"
                 )
             ).addOnSuccessListener {
-                Log.d("Firebase", "Se guardo la ciudad correctamente")
+                Log.d("Firebase", "Se guardo el sms correctamente")
             }.addOnFailureListener { error ->
                 Log.e("FirebaseError", error.toString())
             }

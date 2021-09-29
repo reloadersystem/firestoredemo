@@ -5,6 +5,7 @@ import java.io.Serializable
 import java.util.*
 
 data class ESms(
+    val code :String,
     val estado_id: Any,
     val sms_destinatario: String,
     val sms_envio_error: String,
